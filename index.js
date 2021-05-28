@@ -9,8 +9,8 @@
  * Custom code
  */
 var key = 13;
-var out_len_long = 64;
-var out_len_short = 24;
+var out_len_long = 128;
+var out_len_short = 25;
 var charset = [
 	"ABCDEFGHIJKLMNOP",
 	"QRSTUVWXYZAEIOUY",
@@ -34,13 +34,13 @@ function hashstring (str, id, len) {
 	var hash = str + str.length + key + id;
 	var seed = str.length;
 	for (let i = 0; i < str.length; i++) {
-		hash = sha3_512(hash);
+		hash = shake256(hash, 4096);
 	}
 
 	var pass_b16 = hash.substring(0, len);
 	var pass_out = convertstring(pass_b16, seed);
 
-	var shuffle_seed = hash.substring(len, 32);
+	var shuffle_seed = hash.substring(len, 64);
 	pass_out = shuffle(pass_out.split(""), shuffle_seed).join("");
 	return pass_out;
 }
